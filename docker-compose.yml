@@ -6,13 +6,13 @@ networks:
 
 services:
   cassandra:
-    image: "cassandra:3"
+    image: cassandra:3
     networks:
       - app-tier
     ports:
-      - "9042:9042"
+      - 9042:9042
   kong:
-    image: "kong"
+    image: kong
     networks:
       - app-tier
     links:
@@ -22,15 +22,22 @@ services:
     volumes:
       - ./bin:/data/bin
     ports:
-      - "8001:8001"
-      - "8000:8000"
+      - 8001:8001
+      - 8000:8000
     command: sh /data/bin/start-kong.sh
   kafka:
-    image: "spotify/kafkaproxy"
+    image: spotify/kafkaproxy
     networks:
       - app-tier
     ports:
-      - "9092:9092"
-      - "2181:2181"
+      - 9092:9092
+      - 2181:2181
     env_file:
       - env/kafka.env
+  app:
+    image: openjdk:11-jdk-slim
+    networks:
+      - app-tier
+    volumes:
+      - ./assembly:/opt/assembly
+    command: javac -version
