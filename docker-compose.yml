@@ -34,6 +34,37 @@ services:
       - 2181:2181
     env_file:
       - env/kafka.env
+  hadoop-namenode:
+    image: uhopper/hadoop-namenode
+    networks:
+      - app-tier
+    env_file:
+      - env/hadoop-namenode.env
+  hadoop-datanode:
+    image: uhopper/hadoop-datanode
+    networks:
+      - app-tier
+    env_file:
+      - env/hadoop-datanode.env
+    links:
+      - hadoop-namenode
+  hadoop-resourcemanager:
+    image: uhopper/hadoop-resourcemanager
+    networks:
+      - app-tier
+    env_file:
+      - env/hadoop-resourcemanager.env
+    links:
+      - hadoop-namenode
+  hadoop-nodemanager:
+    image: uhopper/hadoop-nodemanager
+    networks:
+      - app-tier
+    env_file:
+      - env/hadoop-nodemanager.env
+    links:
+      - hadoop-namenode
+      - hadoop-resourcemanager
   app:
     image: openjdk:11-jdk-slim
     networks:
